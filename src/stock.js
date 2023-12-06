@@ -4,6 +4,7 @@ import Basic from "./Components/Basic"
 function Stock() {
     const [token, setToken] = useState('');
     const [inventory, setInventory] = useState([])
+
     useEffect(() => {
         fetchData();
     }, [])
@@ -23,7 +24,7 @@ function Stock() {
                     if (response.ok) {
                         const inventoryData = await response.json();
                         console.log('Inventory API response:', inventoryData);
-                        console.log("this is inventory data:", inventoryData.results)
+                        //console.log("this is inventory data:", inventoryData.results)
                         setInventory(inventoryData.results)
                     } else {
                         console.error('Inventory API request failed:', response.statusText);
@@ -65,9 +66,9 @@ function Stock() {
         }
     };
     return (
-        <div>
-            <h5>Stock</h5>
-
+        <div className="text-center">
+            <h1>Stock</h1>
+            <br></br>
             <Basic names={inventory} token={token}/>
         </div>
     )

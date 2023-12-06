@@ -1,175 +1,198 @@
 import React, { useState } from "react";
+function Basic({ names, token }) {
+  const sendMail = async () => {
+    const api =
+      "https://eaf-dms-api.yecor.com/api/inventory/bulk_stock_in_out/";
 
-function Basic({ names,token }) {
-  
-      const sendMail = async ()=>{
-                const api = "https://eaf-dms-api.yecor.com/api/inventory/bulk_stock_in_out/"
-                /*const request = {
-                  "stock_entries": containers.map(container => ({
-                    "product_id": 29, // Assuming this is a static value, replace it if needed
-                    "batch_number": `${container.batchNumber}`,
-                    "expiry_date": `${container.updatedDate}`,
-                    "qty": `${container.inwardqty}`,
-                  })
-                  ),*/
-                /*const request={
-                  "stock_entries": [
-                    {
-                      "product_id": 29,
-                        "batch_number": `${containers[0].batchNumber}`,
-                        "expiry_date": `${containers[0].updatedDate}`,
-                        "qty": `${containers[0].inwardqty}`
-                    }
-                ],
-                "stock_type": "FreshProduct", // pass static value as FreshProduct
-                "stock_entry_type": "In", // pass static value as In
-                "receiver_warehouse_id": "62" // pass static value as 62
-                }*/
-                const request = {
-                  "stock_entries": containers.map(container => ({
-                    "product_id": 29, // Assuming this is a static value, replace it if needed
-                    "batch_number": `${container.batchNumber}`,
-                    "expiry_date": `${container.updatedDate}`,
-                    "qty": `${container.inwardqty}`,
-                  })),
-                  "stock_type": "FreshProduct",
-                  "stock_entry_type": "In",
-                  "receiver_warehouse_id": "62",
-                  
-                };
-                try{
-                      const response  =await fetch(api,{
-                        method:"POST",
-                        headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${token}`,
-                      },
-                      body: JSON.stringify(request),
-                      })
-                      if(response){
-                              const data  =await response.json()
-                              console.log(data)
-                      }
-                      else{
-                              console.log("api failed:",response.statusText)
-                      }
-                }
-                catch(error){
-                        console.log(error)
-                }
-               
+    const isMissingData = containers.some(
+      (container) =>
+        !container.selectedValue ||
+        !container.batchNumber ||
+        !container.updatedDate ||
+        !container.inwardQty
+    );
+
+    if (isMissingData) {
+      alert(
+        "Please fill in all the fields for each container before submitting."
+      );
+    } else {
+      const request = {
+        stock_entries: containers.map((container) => ({
+          product_id: `${container.selectedValue}`,
+          batch_number: `${container.batchNumber}`,
+          expiry_date: `${container.updatedDate}`,
+          qty: `${container.inwardQty}`,
+        })),
+        stock_type: "FreshProduct",
+        stock_entry_type: "In",
+        receiver_warehouse_id: "62",
+      };
+      try {
+        const response = await fetch(api, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(request),
+        });
+        if (response) {
+          const data = await response.json();
+          console.log(data);
+        } else {
+          console.log("api failed:", response.statusText);
+        }
+      } catch (error) {
+        console.log(error);
       }
+    }
+  };
 
-
-
-
-
-
-  const [containers, setContainers] = useState([{ selectedValue: "", batchNumber: "",updatedDate:"",inwardqty:""}]);
-  console.log("this is container",containers)
+  const [containers, setContainers] = useState([
+    { selectedValue: "", batchNumber: "", updatedDate: "", inwardQty: "" },
+  ]);
+  //console.log("this is container", containers)
   const handleSelectChange = (e, index) => {
-    const updatedContainers = [...containers]
-    updatedContainers[index].selectedValue = e.target.value
-    setContainers(updatedContainers)
+    const updatedContainers = [...containers];
+    updatedContainers[index].selectedValue = e.target.value;
+    setContainers(updatedContainers);
   };
 
   const handleBatchNumberChange = (e, index) => {
-    const updatedContainers = [...containers]
-    updatedContainers[index].batchNumber = e.target.value
-    setContainers(updatedContainers)
+    const regrex = /^[\d#]+$/;
+
+    const inputValue = e.target.value;
+    console.log(inputValue);
+    if (regrex.test(inputValue)) {
+      const updatedContainers = [...containers];
+      updatedContainers[index].batchNumber =
+        inputValue[0] === "#" ? inputValue : "#" + inputValue;
+      setContainers(updatedContainers);
+    } else {
+      alert("Batch Number should contain only numeric values.");
+      return;
+    }
   };
 
   const handleAddContainer = () => {
-    setContainers([...containers, { selectedValue: "", batchNumber: "" }]);
+    setContainers([
+      ...containers,
+      { selectedValue: "", batchNumber: "", updatedDate: "", inwardQty: "" },
+    ]);
   };
 
   const handleRemoveContainer = (index) => {
-    if(containers.length>1){
-        const updatedContainers = [...containers];
-    updatedContainers.splice(index, 1)
-    setContainers(updatedContainers)
-
+    if (containers.length > 1) {
+      const updatedContainers = [...containers];
+      updatedContainers.splice(index, 1);
+      setContainers(updatedContainers);
+    } else {
+      alert("you cannot delete the container");
     }
-    else{
-        alert("you cannot delet the container")
-    }
-    
   };
-const handleDate = (e,index)=>{
-  const updatedContainers = [...containers]
-  updatedContainers[index].updatedDate=e.target.value
-  setContainers(updatedContainers)
-}
-const handleInwardqty=(e,index)=>{
-  const updatedContainers = [...containers]
-  updatedContainers[index].inwardqty=e.target.value
-  setContainers(updatedContainers)
-}
-
+  const handleDate = (e, index) => {
+    const updatedContainers = [...containers];
+    updatedContainers[index].updatedDate = e.target.value;
+    setContainers(updatedContainers);
+  };
+  const handleInwardQty = (e, index) => {
+    const updatedContainers = [...containers];
+    updatedContainers[index].inwardQty = e.target.value;
+    setContainers(updatedContainers);
+  };
+  const Cancel = () => {
+    setContainers([
+      { selectedValue: "", batchNumber: "", updatedDate: "", inwardQty: "" },
+    ]);
+  };
   return (
-    <div className="border">
+    <div className="border border-success">
+      <br />
+
       {containers.map((container, index) => (
         <div key={index} className="container">
           <div className="row align-items-center">
             <div className="col-md-2">
-              <p>product sku</p>
+              <h6>product sku</h6>
               <div className="dropdown">
-                <button className="dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                {container.selectedValue ? container.selectedValue : "--Select--"}
-      </button>
-                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <select value={container.selectedValue} onChange={(e) => handleSelectChange(e, index)}>
-                    <option value="">--Select--</option>
-                    {names.map((product, productIndex) => (
-                      <option key={productIndex} value={product.name}>
-                        {product.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <select
+                  value={container.selectedValue}
+                  onChange={(e) => handleSelectChange(e, index)}
+                >
+                  <option value="">--Select--</option>
+                  {names.map((product, productIndex) => (
+                    <option key={productIndex} value={product.id}>
+                      {product.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
             <div className="col-md-2">
-              <p>Batch Number</p>
+              <h6>Batch Number</h6>
               <input
-                type="number"
+                type="text"
                 placeholder="Type here..."
                 value={container.batchNumber}
                 onChange={(e) => handleBatchNumberChange(e, index)}
               />
             </div>
             <div className="col-md-2">
-              <p>Expiry Date</p>
-              <input type="Date" value={new Date().toISOString().split("T")[0]} onChange={(e) =>handleDate(e,index)} />
+              <h6>Expiry Date</h6>
+              <input
+                type="Date"
+                value={
+                  container.updatedDate === ""
+                    ? new Date().toISOString().split("T")[0]
+                    : container.updatedDate
+                }
+                onChange={(e) => handleDate(e, index)}
+              />
             </div>
             <div className="col-md-2">
-              <p>Inward Qty</p>
-              <input type="number" placeholder="Type Here..."onChange={(e)=>handleInwardqty(e,index)} />
+              <h6>Inward Qty</h6>
+              <input
+                type="number"
+                placeholder="Type Here..."
+                value={container.inwardQty}
+                onChange={(e) => handleInwardQty(e, index)}
+              />
             </div>
             <div className="col-md-2">
-              <button onClick={() => handleRemoveContainer(index)}>X</button>
+              <button
+                className="btn btn-danger"
+                onClick={() => handleRemoveContainer(index)}
+              >
+                X
+              </button>
             </div>
           </div>
         </div>
       ))}
       <br />
-      <button type="button" onClick={handleAddContainer}>
-        +
-      </button>
-      <div className="container ">
-        <div className="row">
-          <div className="col-md-4">
-                <button type="button" onClick={sendMail}>submit</button>
-                      </div>
-                      <div className="col-md-4">
-                      <button type="reset">cancel</button>
-                      </div>
-
-        </div>
-
+      <div>
+        <button className="btn btn-success" onClick={handleAddContainer}>
+          +
+        </button>
       </div>
+      <br />
+      <div className="container ">
+        <div className="row ">
+          <div className="col-md-4">
+            <button className="btn btn-primary" onClick={sendMail}>
+              submit
+            </button>
+          </div>
+          <div className="col-md-4">
+            <button className="btn btn-danger" onClick={Cancel}>
+              cancel
+            </button>
+          </div>
+        </div>
+      </div>
+      <br />
     </div>
-    
   );
 }
 
