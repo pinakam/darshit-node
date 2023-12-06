@@ -9,11 +9,9 @@ function Stock() {
         fetchData();
     }, [])
 
-
     useEffect(() => {
         if (token) {
-            const inventoryApiUrl = 'https://eaf-dms-api.yecor.com/api/inventory/product-SKUs/?warehouse_id=22&ordering=name&search=&limit=10&offset=&remove_product_stocking=true';
-
+            const inventoryApiUrl = 'https://eaf-dms-api.yecor.com/api/inventory/product-SKUs/?warehouse_id=22&ordering=name&search=&limit=1000&offset=&remove_product_stocking=true';
             const fetchInventoryData = async () => {
                 try {
                     const response = await fetch(inventoryApiUrl, {
@@ -35,7 +33,7 @@ function Stock() {
             };
             fetchInventoryData();
         }
-    }, [token]);
+    },[token]);
     const fetchData = async () => {
         const apiUrl = 'https://eaf-dms-api.yecor.com/api/auth/login'
         const requestData = {
@@ -44,7 +42,7 @@ function Stock() {
             device_id: 'sDUhIoUzN41Is4iM1r0BcsDP4exWLpInVxuT50Ft',
             device_token: 'cyKtfAZpI9GBrLUfz8SgWV:APA91bEECZrhEE80WnlJmEOiX6_EJ-JtDF9IV5eW96wgj-ghSJ7c3K5ZG9Psh8CMyYWcoDxDcfU805SDRpBdoJompANG3YTp0aeR4wlT5tiWZdmK-3KPq7kECF8raRLRfh0qW3TN1SnA',
             device_type: 'web',
-        };
+        }
         try {
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -73,5 +71,4 @@ function Stock() {
         </div>
     )
 }
-
 export default Stock

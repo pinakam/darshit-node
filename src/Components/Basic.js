@@ -11,7 +11,6 @@ function Basic({ names, token }) {
         !container.updatedDate ||
         !container.inwardQty
     );
-
     if (isMissingData) {
       alert(
         "Please fill in all the fields for each container before submitting."
@@ -40,6 +39,7 @@ function Basic({ names, token }) {
         if (response) {
           const data = await response.json();
           console.log(data);
+          Cancel()
         } else {
           console.log("api failed:", response.statusText);
         }
@@ -48,7 +48,6 @@ function Basic({ names, token }) {
       }
     }
   };
-
   const [containers, setContainers] = useState([
     { selectedValue: "", batchNumber: "", updatedDate: "", inwardQty: "" },
   ]);
@@ -58,30 +57,26 @@ function Basic({ names, token }) {
     updatedContainers[index].selectedValue = e.target.value;
     setContainers(updatedContainers);
   };
-
   const handleBatchNumberChange = (e, index) => {
-    const regrex = /^[\d#]+$/;
-
+    const regrex =/^[0-9#]*$/
     const inputValue = e.target.value;
     console.log(inputValue);
-    if (regrex.test(inputValue)) {
+    if (regrex.test(inputValue) || inputValue==="") {
       const updatedContainers = [...containers];
       updatedContainers[index].batchNumber =
-        inputValue[0] === "#" ? inputValue : "#" + inputValue;
+        inputValue[0] === "#" ? inputValue :"#"+inputValue
       setContainers(updatedContainers);
     } else {
       alert("Batch Number should contain only numeric values.");
       return;
     }
-  };
-
+  };  
   const handleAddContainer = () => {
     setContainers([
       ...containers,
       { selectedValue: "", batchNumber: "", updatedDate: "", inwardQty: "" },
     ]);
   };
-
   const handleRemoveContainer = (index) => {
     if (containers.length > 1) {
       const updatedContainers = [...containers];
@@ -97,9 +92,16 @@ function Basic({ names, token }) {
     setContainers(updatedContainers);
   };
   const handleInwardQty = (e, index) => {
-    const updatedContainers = [...containers];
-    updatedContainers[index].inwardQty = e.target.value;
+    const quantity = e.target.value
+    const Re = /^[0-9]+(\.[0-9]+)?$/
+      if(Re.test(quantity) || quantity===""){
+        const updatedContainers = [...containers];
+    updatedContainers[index].inwardQty =quantity;
     setContainers(updatedContainers);
+      }
+      else{
+        alert("enter only number")
+      }
   };
   const Cancel = () => {
     setContainers([
@@ -109,82 +111,93 @@ function Basic({ names, token }) {
   return (
     <div className="border border-success">
       <br />
-
-      {containers.map((container, index) => (
-        <div key={index} className="container">
-          <div className="row align-items-center">
-            <div className="col-md-2">
-              <h6>product sku</h6>
-              <div className="dropdown">
-                <select
-                  value={container.selectedValue}
-                  onChange={(e) => handleSelectChange(e, index)}
-                >
-                  <option value="">--Select--</option>
-                  {names.map((product, productIndex) => (
-                    <option key={productIndex} value={product.id}>
-                      {product.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="col-md-2">
-              <h6>Batch Number</h6>
-              <input
-                type="text"
-                placeholder="Type here..."
-                value={container.batchNumber}
-                onChange={(e) => handleBatchNumberChange(e, index)}
-              />
-            </div>
-            <div className="col-md-2">
-              <h6>Expiry Date</h6>
-              <input
-                type="Date"
-                value={
-                  container.updatedDate === ""
-                    ? new Date().toISOString().split("T")[0]
-                    : container.updatedDate
-                }
-                onChange={(e) => handleDate(e, index)}
-              />
-            </div>
-            <div className="col-md-2">
-              <h6>Inward Qty</h6>
-              <input
-                type="number"
-                placeholder="Type Here..."
-                value={container.inwardQty}
-                onChange={(e) => handleInwardQty(e, index)}
-              />
-            </div>
-            <div className="col-md-2">
-              <button
-                className="btn btn-danger"
-                onClick={() => handleRemoveContainer(index)}
-              >
-                X
-              </button>
-            </div>
-          </div>
+    
+{containers.map((container, index) => (
+  <div key={index} className="container">
+    <div className="row align-items-center">
+      <div className="col-md-3">
+        <h6>Product SKU</h6>
+        <div className="form-group">
+          <select
+            className="form-control"
+            value={container.selectedValue}
+            onChange={(e) => handleSelectChange(e, index)}
+          >
+            <option value="">--Select--</option>
+            {names.map((product, productIndex) => (
+              <option key={productIndex} value={product.id}>
+                {product.name}
+              </option>
+            ))}
+          </select>
         </div>
-      ))}
+      </div>
+      <div className="col-md-3">
+        <h6>Batch Number</h6>
+        <div className="form-group">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Type here..."
+            value={container.batchNumber}
+            onChange={(e) => handleBatchNumberChange(e, index)}
+          />
+        </div>
+      </div>
+      <div className="col-md-3">
+        <h6>Expiry Date</h6>
+        <div className="form-group">
+          <input
+            type="date"
+            className="form-control"
+            value={
+              container.updatedDate === ""
+                ? new Date().toISOString().split("T")[0]
+                : container.updatedDate
+            }
+            onChange={(e) => handleDate(e, index)}
+            min={new Date().toISOString().split("T")[0]}
+          />
+        </div>
+      </div>
+      <div className="col-md-2">
+        <h6>Inward Qty</h6>
+        <div className="form-group">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Type Here..."
+            value={container.inwardQty}
+            onChange={(e) => handleInwardQty(e, index)}
+          />
+        </div>
+      </div>
+      <div className="col-md-1">
+        <button
+          className="btn btn-danger"
+          onClick={() => handleRemoveContainer(index)}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+))}
       <br />
       <div>
-        <button className="btn btn-success" onClick={handleAddContainer}>
-          +
+        <button className="btn btn-secondary" onClick={handleAddContainer}>
+          Add
         </button>
       </div>
       <br />
-      <div className="container ">
-        <div className="row ">
-          <div className="col-md-4">
+      <div className="container  ">
+        <div className="row justify-content-center">
+          <div className="col-md-1">
             <button className="btn btn-primary" onClick={sendMail}>
               submit
             </button>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-1">
             <button className="btn btn-danger" onClick={Cancel}>
               cancel
             </button>
@@ -195,5 +208,4 @@ function Basic({ names, token }) {
     </div>
   );
 }
-
 export default Basic;
