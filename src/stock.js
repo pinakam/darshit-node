@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import Basic from "./Components/Basic"
 
-function Stock() {
+
+const Stock =()=> {
     const [token, setToken] = useState('');
     const [inventory, setInventory] = useState([])
     const [page, setPage] = useState(1); 
@@ -10,7 +11,6 @@ function Stock() {
    
     useEffect(() => {
         const storedToken= localStorage.getItem(token)
-        console.log("this is storedtoken:",storedToken)
         if(!storedToken){
             fetchData()
         }
@@ -48,18 +48,13 @@ function Stock() {
                 const data = await response.json();
                 console.log(data)
                 console.log(data.token)
-                setToken("")
                 setToken(data.token)
                 localStorage.setItem('token',data.token)
-                console.log('API response:', data)
 
             } else {
                 console.error('API request failed:', response.statusText)
             }
         } catch (error) {
-            console.log("hello1")
-            console.log("this is error code",error.code)
-            console.log("hello2")
             console.error('Error:', error)
         }
     };

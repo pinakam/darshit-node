@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AsyncPaginate } from "react-select-async-paginate";
 
-function Basic({ names, token, loadMore, hasMore ,fetchInventoryData,search,page ,setInventory,setPage}) {
+const Basic= ({ names, token, loadMore, hasMore ,fetchInventoryData,search,page ,setInventory,setPage}) =>{
   
   const [containers, setContainers] = useState([
     { selectedValue: "", batchNumber: "", updatedDate: "", inwardQty: "" },
@@ -87,7 +87,6 @@ function Basic({ names, token, loadMore, hasMore ,fetchInventoryData,search,page
       }
     }
   };
-  console.log("this is missing field:",missingFields)
   const handleSelectChange = (selectedOption, index) => {
     const updatedContainers = [...containers]
     updatedContainers[index].selectedValue = selectedOption.value
