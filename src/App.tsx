@@ -10,11 +10,9 @@ import { setCurrentComponent,updateComponentData } from './slice/component1Slice
 const App = () => {
   const dispatch = useDispatch();
   const currentComponent = useSelector((state:RootState) => state.slice1.currentComponent)
- // const [currentComponent, setCurrentComponent] = useState(1);
   const handleNext = () => {
     if (currentComponent < 5) {
       dispatch(setCurrentComponent(currentComponent + 1))
-      //setCurrentComponent(currentComponent + 1);
     }
   }
 

@@ -10,9 +10,10 @@ interface componentSlice {
   interest: string;
   institute: String;
   degree: string;
-  file:string,
+  getImage:string
   currentComponent:Number
 }
+
 const initialState = {
   firstName: "",
   lastName: "",
@@ -24,7 +25,7 @@ const initialState = {
   date: "",
   institute: "",
   degree: "",
-  file:"",
+  getImage:"",
   currentComponent:1
 };
 
@@ -42,8 +43,11 @@ export const componentSlice = createSlice({
     setCurrentComponent: (state, action) => {
       state.currentComponent = action.payload;
     },
+    setImage: (state, action) => {
+      state.getImage = action.payload
   },
+}
 });
 
-export const { updateComponentData ,setCurrentComponent} = componentSlice.actions;
+export const { updateComponentData ,setCurrentComponent,setImage} = componentSlice.actions;
 export default componentSlice.reducer;

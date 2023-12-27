@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateComponentData } from "../slice/component1Slice";
+import { updateComponentData,setImage } from "../slice/component1Slice";
 import { RootState } from "../store/store";
 
 const Component5 = () => {
   const reduxState = useSelector((state: RootState) => state.slice1);
   const dispatch = useDispatch();
   console.log("this is state", reduxState);
-  console.log("this is redux state file upload:",reduxState.file)
 
   const [localState, setLocalState] = useState({
     Institute: reduxState.institute || "",
     degree: reduxState.degree || "",
-    file:reduxState.file ||""
+    base64Image: reduxState.getImage || ""
   });
 
 
@@ -20,19 +19,34 @@ const Component5 = () => {
     setLocalState({
       Institute: reduxState.institute || "",
       degree: reduxState.degree || "",
-      file:reduxState.file
+      base64Image: localState.base64Image || ""
     });
-  }, [reduxState]);
+    
+  }, [reduxState,localState.base64Image]);
  
 
+  
   const handleInputChange = (field: string, value: string) => {
     setLocalState((prev) => ({
       ...prev,
       [field]: value,
     }));
-    dispatch(updateComponentData({ field, value }));
+    dispatch(updateComponentData({field,value}))
+
+    
   };
-  
+const handleImage =(e:any)=>{
+  const file = e.target.files[0]
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const imageDataUrl = reader.result;
+      dispatch(setImage(imageDataUrl));
+      console.log(imageDataUrl);
+    };
+    reader.readAsDataURL(file);
+  }
+}
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -47,7 +61,7 @@ const Component5 = () => {
     console.log("date", reduxState.date);
     console.log("institute:", reduxState.institute);
     console.log("degree:", reduxState.degree);
-    console.log("file",reduxState.file);
+    console.log("file",reduxState.getImage);
   };
 
   
@@ -113,14 +127,13 @@ const Component5 = () => {
             Other
           </label>
         </div>
-        <div className="custom-file">
-  <input type="file" className="custom-file-input" id="customFile"
-  onChange={(e)=>handleInputChange("file",e.target.value)}
-  />
-  <label className="custom-file-label">
-  {localState.file ?localState.file : "Choose file"}
-          </label>
-</div>
+        <input type="file"
+        onChange={handleImage}
+        />
+        {
+          <img src={reduxState.getImage} 
+          style={{height:"100px", width:"100px"}}/>
+        }
         <button type="submit" className="btn btn-primary mt-2">
           Submit
         </button>
