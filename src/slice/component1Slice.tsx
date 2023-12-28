@@ -1,18 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface componentSlice {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  gender: String;
-  country: string;
-  interest: string;
-  institute: String;
-  degree: string;
-  getImage:string
-  currentComponent:Number
-}
+
 
 const initialState = {
   firstName: "",
@@ -24,7 +12,7 @@ const initialState = {
   address: "",
   date: "",
   institute: "",
-  degree: "",
+  degree: [] as string [],
   getImage:"",
   currentComponent:1
 };

@@ -6,7 +6,6 @@ import { RootState } from "../store/store";
 const Component1 = () => {
   const reduxState = useSelector((state: RootState) => state.slice1);
   const dispatch = useDispatch();
-  console.log("this is state", reduxState);
   const [localState, setLocalState] = useState({
     firstName: reduxState.firstName || "",
     lastName: reduxState.lastName || "",

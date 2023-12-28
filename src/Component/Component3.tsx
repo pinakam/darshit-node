@@ -6,7 +6,6 @@ import { RootState } from "../store/store";
 const Component3 = () => {
   const reduxState = useSelector((state: RootState) => state.slice1);
   const dispatch = useDispatch();
-  console.log("this is state", reduxState);
   const [localState, setLocalState] = useState({
     gender: reduxState.gender || "",
     country: reduxState.country || "",

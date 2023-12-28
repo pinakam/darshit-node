@@ -7,8 +7,6 @@ import { useEffect, useState } from "react";
 const Component2 = () => {
   const reduxState = useSelector((state: RootState) => state.slice1);
   const dispatch = useDispatch();
-  console.log("this is state", reduxState);
-
   const [localState, setLocalState] = useState({
     email: reduxState.email || "",
     password: reduxState.password || "",
@@ -59,7 +57,6 @@ const Component2 = () => {
             className="form-check-input"
             id="exampleCheck1"
           />
-          <label className="form-check-label">Check me out</label>
         </div>
       </form>
     </div>

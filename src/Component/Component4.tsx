@@ -6,7 +6,6 @@ import { RootState } from "../store/store";
 const Component4 = () => {
   const reduxState = useSelector((state: RootState) => state.slice1);
   const dispatch = useDispatch();
-  console.log("this is state", reduxState);
   const [localState, setLocalState] = useState({
     address: reduxState.address || "",
     date: reduxState.date || "",
