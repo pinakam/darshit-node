@@ -30,11 +30,44 @@ const App = () => {
                 isAuthenticated ? <Home /> : <Navigate to="/login" replace />
               }
             />
-            <Route path="/about" element={<About />} />
-            <Route path="/career" element={<Career />} />
-            <Route path="/call" element={<Call />} />
-            <Route path="/home/detail" element={<DetailHome />} />
-            <Route path="/career/detail" element={<DetailCareer />} />
+            <Route
+              path="/about"
+              element={
+                isAuthenticated ? <About /> : <Navigate to="/login" replace />
+              }
+            />
+            <Route
+              path="/career"
+              element={
+                isAuthenticated ? <Career /> : <Navigate to="/login" replace />
+              }
+            />
+            <Route
+              path="/call"
+              element={
+                isAuthenticated ? <Call /> : <Navigate to="/login" replace />
+              }
+            />
+            <Route
+              path="/home/detail"
+              element={
+                isAuthenticated ? (
+                  <DetailHome />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/career/detail"
+              element={
+                isAuthenticated ? (
+                  <DetailCareer />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>
         </div>

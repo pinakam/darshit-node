@@ -16,19 +16,17 @@ const LoginForm = () => {
     setPassword(e.target.value);
   };
 
-  useEffect(()=>{
-    localStorage.setItem("email",email)
-    localStorage.setItem("password",password)
-  },[email,password])
+  useEffect(() => {
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
+  }, [email, password]);
+
   const handleLogin = () => {
     if (!email || !password) {
       alert("Email or Password is missing");
     } else {
       navigate("/home");
     }
-
-    console.log("Email:", email);
-    console.log("Password:", password);
   };
 
   return (
