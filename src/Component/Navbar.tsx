@@ -1,7 +1,15 @@
 import {Link} from "react-router-dom";
 
 const Layout = () => {
-  const value = ["home", "career", "about", "call"];
+  let Navigation: string[] = [];
+  const userRole = localStorage.getItem("role");
+  switch (userRole) {
+    case "manager":
+      Navigation = ["home", "career", "about", "call", "managerpanel"];
+      break;
+    case "admin":
+      Navigation = ["home", "career", "about", "call", "adminpanel"];
+  }
   return (
     <div style={{display: "flex", minHeight: "100vh"}}>
       <nav
@@ -12,17 +20,15 @@ const Layout = () => {
           padding: "20px",
         }}
       >
-        {value.map((item) => {
-          return (
-            <ul>
-              <li style={{color: "black"}}>
-                <Link to={item} style={{color: "black"}}>
-                  {item}
-                </Link>
-              </li>
-            </ul>
-          );
-        })}
+        {Navigation.map((item) => (
+          <ul key={item}>
+            <li style={{color: "black"}}>
+              <Link to={item} style={{color: "black"}}>
+                {item}
+              </Link>
+            </li>
+          </ul>
+        ))}
       </nav>
     </div>
   );
